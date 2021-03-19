@@ -1,0 +1,147 @@
+package JeatBeans.Cinema;
+
+import java.math.BigDecimal;
+import java.util.Arrays;
+import java.util.Objects;
+import java.util.Scanner;
+
+public class SeventhLesson {
+    public static Scanner scanner = new Scanner(System.in);
+    public static int rows;
+    public static int seats;
+    public static char[][] room;
+    public static int numberOfPurchasedTickets = 0;
+    public static int numberOfSeats;
+    public static float percentage = 0;
+    public static int currentIncome = 0;
+    public static int totalIncome = 0;
+
+
+    public static void showTheSeats() {
+        System.out.println();
+        System.out.println("Cinema:");
+
+
+        for (int i = 0; i < seats + 1; i++) {
+            System.out.printf(i == 0 ? "  " : "%d ", i);
+        }
+        System.out.println();
+        for (int y = 1; y < rows + 1; y++) {
+            System.out.printf("%d ", y);
+            for (int x = 0; x < seats; x++) {
+                System.out.printf("%c ", room[y - 1][x]);
+            }
+            System.out.print("\n");
+        }
+        System.out.println();
+    }
+
+    public static void initializeRoom() {
+        System.out.println("Enter the number of rows:");
+        rows = scanner.nextInt();
+        System.out.println("Enter the number of seats in each row:");
+        seats = scanner.nextInt();
+
+        room = new char[rows][seats];
+
+        for (char[] row : room) {
+            Arrays.fill(row, 'S');
+        }
+    }
+
+    public static void byeATicket() {
+        int row;
+        int seat;
+
+        do {
+            System.out.println("Enter a row number:");
+            row = scanner.nextInt();
+            System.out.println("Enter a seat number in that row:");
+            seat = scanner.nextInt();
+
+            if ( row > rows || seat > seats ) {
+                System.out.println("Wrong input!");
+            } else if ( room[row - 1][seat - 1] == 'B' ) {
+                System.out.println("That ticket has already been purchased!");
+            } else {
+                break;
+            }
+        }
+            while (true);
+
+            int total = rows * seats;
+            int ticketPrice = 0;
+
+            if ( total <= 60 ) {
+                numberOfPurchasedTickets++;
+                ticketPrice = 10;
+            } else {
+                int front = rows / 2;
+                int back = rows - front;
+                numberOfPurchasedTickets++;
+                ticketPrice = row <= front ? 10 : 8;
+            }
+
+            currentIncome = currentIncome + ticketPrice;
+
+
+            room[row - 1][seat - 1] = 'B';
+
+            System.out.printf("\nTicket price: $%d\n", ticketPrice);
+        }
+
+
+    public static void statistics() {
+
+        System.out.println("Number of purchased tickets: " + numberOfPurchasedTickets);
+        numberOfSeats = seats * rows;
+        if ( numberOfPurchasedTickets == 0 ) {
+            percentage = 0;
+        } else {
+            percentage = (float) numberOfPurchasedTickets / ((float) numberOfSeats) * 100;
+        }
+        System.out.println("Percentage: " + String.format("%.2f", percentage) + "%");
+
+        System.out.printf("Current income: $%d\n", currentIncome);
+
+        if ( numberOfSeats <= 60 ) {
+            totalIncome = 10 * numberOfSeats;
+        } else {
+            int front = (int) Math.ceil((float)rows / 2);
+            int back = rows - front;
+            totalIncome = (front * 8 * seats) + (back * 10 * seats);
+        }
+        System.out.printf("Total income: $%d\n\n", totalIncome);
+
+    }
+
+    public static void main(String[] args) {
+        initializeRoom();
+        boolean gameEnded = false;
+
+        while (true) {
+            System.out.println("1. Show the seats");
+            System.out.println("2. Buy a ticket");
+            System.out.println("3. Statistics");
+            System.out.println("0. Exit");
+            int userInput3 = scanner.nextInt();
+            switch (userInput3) {
+                case 1:
+                    showTheSeats();
+                    continue;
+                case 2:
+                    byeATicket();
+                    continue;
+                case 3:
+                    statistics();
+                    continue;
+                case 0:
+                    gameEnded = true;
+                    return;
+            }
+
+        }
+
+    }
+}
+
